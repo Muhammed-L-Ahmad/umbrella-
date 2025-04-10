@@ -5,4 +5,4 @@ require "http"
 require "json"
 require "dotenv/load"
 
-
+pirate_weather_api_key = ENV.fetch("PIRATE_WEATHER_KEY")
