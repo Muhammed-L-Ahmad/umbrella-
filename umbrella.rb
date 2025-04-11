@@ -29,8 +29,31 @@ longitude = coordinates["lng"]
 
 pp "📌 Your coordinates are: #{latitude}, #{longitude}"
 # Get the weather at the user’s coordinates from the Pirate Weather API.
-# Display the current temperature and summary of the weather for the next hour.If you get that far, then stretch further:
+pirate_url = "https://api.pirateweather.net/forecast/#{pirate_weather_api_key}/#{latitude},#{longitude}"
+
+weather_response = HTTP.get(pirate_url)
+weather_data = JSON.parse(weather_response)
+# Display the current temperature and summary of the weather for the next hour.
+# If you get that far, then stretch further:
+current_temp = weather_data["currently"]["temperature"]
+hourly_summary = weather_data["hourly"]["summary"]
+
+pp "🌡️ It is currently #{current_temp} °F."
+pp "📅 Forecast for the next hour: #{hourly_summary}"
 # For each of the next twelve hours, check if the precipitation probability is greater than 10%.
+rain_hours = []
+weather_data = ["hourly"]["data"][0..11].each_with_index do |hour_data, i|
+  precip_prob = hour_data["precipProbabiliy"]
+  if precip_prob > 0.1
+    rain_hours << { hour: i, probability: precip_prob }
 # If so, print a message saying how many hours from now and what the precipitation probability is.
+    puts "⏱️ In #{i} hours, there is a #{(precip_prob * 100).round}% chance of precipitation."
+  end
+end
 # If any of the next twelve hours has a precipitation probability greater than 10%, print “You might want to carry an umbrella!”
+if rain_hours.any?
+  puts "☔ You might want to carry an umbrella!"
 # If not, print “You probably won’t need an umbrella today.”
+else
+  puts "😎 You probably won't need an umbrella today."
+end
