@@ -42,8 +42,8 @@ pp "🌡️ It is currently #{current_temp} °F."
 pp "📅 Forecast for the next hour: #{hourly_summary}"
 # For each of the next twelve hours, check if the precipitation probability is greater than 10%.
 rain_hours = []
-weather_data = ["hourly"]["data"][0..11].each_with_index do |hour_data, i|
-  precip_prob = hour_data["precipProbabiliy"]
+weather_data["hourly"]["data"][0..11].each_with_index do |hour_data, i|
+  precip_prob = hour_data["precipProbabiliy"] || 0.0
   if precip_prob > 0.1
     rain_hours << { hour: i, probability: precip_prob }
 # If so, print a message saying how many hours from now and what the precipitation probability is.
